@@ -1,0 +1,101 @@
+Databases are managed by Database Management Systems (DBMS).
+DBMS allows the description of the data and the relations concerning them, the interrogation of the base, its update and the sharing and the protection of the data of the base.
+DBMS : Data Base Management System. Example : PostgreSQL, MySQL, Oracle, Microsoft SQL Server.
+
+SQL allows to create tables and to modify them. SQL : Structured Query Language.
+
+DataBase : - store data (relational model)
+           - Manipulate these data (queries, procedures...)
+           - Can be used in a programming language. Example : Java, C++ etc..
+
+Transaction : it's a program unit where execution may change or not the content of a database.
+If the transaction only retrieve data , then do not update the database, this type of transaction is called "a read only database".
+
+DBMS Transaction must be ACID.
+
+ACID : Atomicity, consistency, Isolation, Durability. In order to ensure accuracy, completeness and data integrity.
+
+Atomicity : require that each transaction is 'all or nothing'  - all of it's operations are executed or none
+                                                               - there must be no state in a DB where a transaction is left partially completed
+                                                               
+Consistency : Ensure that any transaction will bring the DB from one valid state to another.
+- The DB must stay in a consistant state after any transaction
+- If the DB was in consistant state before the execution of a transaction, it must stay consistent after the execution of the transaction as well.
+
+Isolation : Ensure that multiple transaction can occur concurrently whithout leading to the inconsistency of DB state.
+- All the transaction will be carried out and executed as if is the only transaction in the system.
+- No transaction will affect the existence of any other transaction.
+
+Durability : means that onece a transaction has been commoditted, it will stay in account, even in the event of power less, crashes or error etc..
+- if a transaction commit but the system fails before the data could be written on the disk, then the data will be updated once the system spring back into action.
+
+OLTP : On line Transaction Processing
+System that support the running activities of the organisation Example : Point of sales in store, ATM, Banks.
+
+Join Méthods : 
+
+Hash Join : We are using Hash Join to join larger data sets. The optimizer uses the smaller of two data sets to build a hash table on the join keyin memory, using a deterministic hash function to know the location in the hash memory in which  to store each row. The DB scan and probing the hash table to find rows that meets the join condition.
+When ? - A relatively large amount of data is joined.
+       - The join is an equijoin
+
+Sort/Merge Join : The DB sort 2 data (the sort join operation). For each row, in the first data set, the DB try to probs the second data set for matching raws and join them (Marge Operation).
+When ? - In contrast to sort merges, hash joins requiere an equality condition.
+
+Nested Loops : The DB joins small subsets of data, or the DB joins large set of data with the optimizer mode set to FIRST_ROWS
+               The inner join condition is an efficient method of accessing the inner node
+               
+Bilan : 
+Nested Join    data set size : small to small
+               join criteria : arbitrary comparaison operator
+               
+Hash Join      data set size : small to large
+               join criteria : and in some case != (but never /,>)
+               
+Sort/Merge Join   data set size : large to large
+                  join criteria : <,>,=
+                  
+Btree - basic Structure (inner node, leaf node) :
+
+An index is an optional structure. Create an index on one or more columns of a table, the benefits: - speeding up data
+                                                                                                    - reducing I/O usage
+                                                                                                    - reducing CPU usage
+                                                                                                    - reducing Memory usage
+Inner Nodes and Leaf/leaves nodes: A node with no children is called a leaf of the tree ; all non-leaves are called internal nodes
+                               I
+                              / \
+                             I   I   internal nodes
+                            /     \
+                           O       O  External / leafs/ leaves nodes
+                           
+Acces Path : 
+- It accept a single row source Input
+- It's output is also a row source
+- It's a unary operation
+- In contrast , a join operation is Binary and receives inputs from two row
+
+Acces Path                    | Btree Index access path | Bit map Index Acces path
+- Full table                  | - Index Scan            | - Bitmap conversation to rowid
+- Table Accesibility rowid    | - Range scan            | - Single Value
+- In - Memory table acces     | - Unique Scan           | - Range scan
+                              | - Fast full scan        | - Bitmap merge
+                              | - Index skip scan       |
+                              | - Index join scan       |
+
+
+SQL processing : Soft Parse , Hard Parse , shared pool check
+
+Soft Parse : A soft parse is any parse that in not a hard parse. If the submitted statement is the same as a reusable SQL statement in the shared pool, then Oracle reuses the existing codes. This called "Library Cache Hit".
+Soft is preferable to Hard parse because the data base skips the optimization and generation steps, proceeding straight to execution.
+
+Hard Parse : If Oracle Data Base cannot reuse existing code, then it must build a new executable version of the application. It's called as Hard Parses or " Librairy Cache Miss".
+So during the Hard Parse, the DB acces the library cache and data dictionary cache to check the data dictionary.
+
+Shared Pool Check : 
+During the parses, the DB perform a shared pool check to determine whether it can skip ressource intensive steps of statement processing.
+
+
+
+
+
+
+
