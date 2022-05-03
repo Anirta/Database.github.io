@@ -43,6 +43,10 @@ When ? - In contrast to sort merges, hash joins requiere an equality condition.
 
 Nested Loops : The DB joins small subsets of data, or the DB joins large set of data with the optimizer mode set to FIRST_ROWS
                The inner join condition is an efficient method of accessing the inner node
+
+Cartesian Join : when ? One or more of the tables does not have any join conditions to any other tables in the statement.
+The optimizer joins every row from one data source with every row from the other data source.
+
                
 Bilan : 
 Nested Join    data set size : small to small
@@ -92,6 +96,70 @@ So during the Hard Parse, the DB acces the library cache and data dictionary cac
 
 Shared Pool Check : 
 During the parses, the DB perform a shared pool check to determine whether it can skip ressource intensive steps of statement processing.
+
+SQL : non procedural langage : Final plan : 
+
+Query optimization is the over all process of choosing the most efficient means of executing SQL Statement.
+SQL is non procedural langage so the optimization is free to merge , reorganize and process in any order.
+An execution plan describe a recommanded method of execution for SQL Statement. The optimizer goal is to generate the most cost effective execution plan (final plan)
+based on the existing table statistics histogramms within a time frame : 
+
+1 - Generate multiple Plan
+2 - Compare them
+3 - Select the most cost effective plan as final Plan
+
+Buffer cache and Database Block : 
+
+Buffer acts as an intermediate (primary) fast acces storage for programs reading or wrinting from/to secondary storage. It's purpose is to speed up acces to disk.
+
+Block : Acces to table rows are usually done by block as they are more afficiency accessed on disk vs accessing row by row.
+Tables is represented by Blocks/Page as smallest components. Then, Block/page can be organized into bigger units to furthers speed up acces to them and/or reduce chance of fragmentation.
+Block --> extent --> segment hierarchy.
+
+Table access path : 
+- Full table scans : Read allrows from a table, and rhen filters out those rows that do not meet the selection criteria Example : SELECT* FROM employées ; 
+when ? In general when no other access path give opportunity.
+
+Table access by row ID : 
+- RowID : Show where the record is physically located (file, block)
+very fast
+But we have to get RowID from somewhere
+
+B-tree Index Access Path : 
+- Unique index path : This is used when all column of a unique (B-tree) index or an index created as a result of a primary key constraint are specified with equality condition
+Example : SELECT* FROM employées WHERE employées_id = 106
+
+- Index range scan : Find a range of values in index entries. Data is returned in the ascendant order of index column.
+Example : SELECT* FROM employees WHERE employees_id>190 ; 
+when ? if we have equality, equality condition.
+
+- Index full scan : When the Optimizer Uses Index Full Scans ?
+
+       - It can eliminate a separate sorting operation as the data in the index is ordered by index key.
+       - Query includes an ORDER BY on indexed non-nullable columns
+       - Predicate in WHERE references a column in the index. This column need not be the leading column
+       - No predicate is specified, but all of the following conditions are met:
+                 - All columns in the table and in the query are in the index
+                 - At least one indexed column is not null
+                 
+- Index Fast Full scan : Fast full index scans are an alternative to a full table scan when the index contains all the columns that are needed for the query,
+and at least one column in the index key has the NOT NULL constraint.
+       - A fast full scan accesses the data in the index itself, without accessing the table. It cannot be used to eliminate a sort operation, 
+       because the data is not ordered by the index key. 
+       - It reads the entire index using multiblock reads, unlike a full index scan, and can be parallelized.
+
+
+Index Clustering Factor : 
+
+For a B-tree index, the  Index Clustering Factor measures the physical grouping of rows in relation to an index value. 
+The index clustering factor helps the optimizer decide whether an index scan or full table scan is more efficient for certain queries. 
+A low clustering factor indicates an efficient index scan.
+
+- The number of I/Os that would be performed in order to read the entire table via the index in a single range scan
+- The number of I/Os has to be at least the number of blocks in the table.
+
+
+
 
 
 
